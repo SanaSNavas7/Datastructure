@@ -1,7 +1,5 @@
-
 #include <stdio.h>
 #include <stdlib.h>
-
 
 struct node {
     int data;
@@ -11,27 +9,29 @@ struct node {
 
 struct node *root = NULL;
 
-
 int display();
 void insertion();
 void deletion();
-
+void search();  // Declare the search function
 
 void main()
 {
     while (1) {
         int choice;
-        printf("Enter 0 to display, 1 to insert, 2 to delete, 5 to exit: ");
+        printf("Enter 0 to display, 1 to insert, 2 to delete, 3 to search, 5 to exit: ");
         scanf("%d", &choice);
         switch(choice) {
             case 0:
-		        display();
+                display();
                 break;
             case 1:
                 insertion();
                 break;
             case 2:
                 deletion();
+                break;
+            case 3:
+                search();  // Call the search function
                 break;
             case 5:
                 return;
@@ -40,7 +40,6 @@ void main()
         }
     }
 }
-
 
 struct node *insert(struct node *root, struct node *newnode) {
     if (root == NULL)
@@ -51,6 +50,7 @@ struct node *insert(struct node *root, struct node *newnode) {
         root->right = insert(root->right, newnode);
     return root;
 }
+
 void insertion() {
     struct node *newnode;
     newnode = (struct node *) malloc(sizeof(struct node));
@@ -61,54 +61,48 @@ void insertion() {
     display();
 }
 
-
 struct node *find_min(struct node *root) {
-	while (root->left != NULL)
-		root = root->left;
-	return root;
+    while (root->left != NULL)
+        root = root->left;
+    return root;
 }
 
 struct node *delete(struct node *root, int value) {
-	if (root == NULL) {
-		printf("Not found!\n");
-		return root;
-	}
-	
-	struct node *temp;
-	if (value < root->data) {
-		root->left = delete(root->left, value);
-	} else if (value > root->data) {
-		root->right = delete(root->right, value);
-	} else {
-	
-		if (root->left == NULL) {
-			temp = root->right;
-			free(root);
-			return temp;
-		} else if (root->right == NULL) {
-			
-			temp = root->left;
-			free(root);
-			return temp;
-		}	
+    if (root == NULL) {
+        printf("Not found!\n");
+        return root;
+    }
 
-		root->data = find_min(root->right)->data;
+    struct node *temp;
+    if (value < root->data) {
+        root->left = delete(root->left, value);
+    } else if (value > root->data) {
+        root->right = delete(root->right, value);
+    } else {
 
-		root->right = delete(root->right, root->data);
-	}
-	return root;
+        if (root->left == NULL) {
+            temp = root->right;
+            free(root);
+            return temp;
+        } else if (root->right == NULL) {
+            temp = root->left;
+            free(root);
+            return temp;
+        }
+
+        root->data = find_min(root->right)->data;
+        root->right = delete(root->right, root->data);
+    }
+    return root;
 }
-
 
 void deletion() {
-	int value;
-	printf("Enter the node to delete: ");
-	scanf("%d", &value);
-	root = delete(root, value);
-	display();
+    int value;
+    printf("Enter the node to delete: ");
+    scanf("%d", &value);
+    root = delete(root, value);
+    display();
 }
-
-
 
 void preOrder(struct node *root) {
     if (root == NULL)
@@ -136,10 +130,11 @@ void postOrder(struct node *root) {
     postOrder(root->right);
     printf("%d -> ", root->data);   
 }
+
 int display() {
     if (root == NULL) {
         printf("Tree is empty!\n");
-        return 1;
+        return 0;
     }
 
     printf("Preorder: ");
@@ -150,4 +145,24 @@ int display() {
     postOrder(root);
     printf("NULL\n");
     return 0;
+}
+
+// Search function to find if a node with the given value exists
+void search() {
+    int value;
+    printf("Enter the value to search for: ");
+    scanf("%d", &value);
+
+    struct node *current = root;
+    while (current != NULL) {
+        if (current->data == value) {
+            printf("Element %d found in the tree.\n", value);
+            return;  // Element found, exit the function
+        } else if (value < current->data) {
+            current = current->left;  // Go left if the value is smaller
+        } else {
+            current = current->right;  // Go right if the value is larger
+        }
+    }
+    printf("Element %d not found in the tree.\n", value);
 }
