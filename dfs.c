@@ -1,35 +1,38 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-int adj[20][20], stack[20], top = -1, n, i, j, start, visited[20];
+int adj[20][20], visited[20], n, start;
 void dfs(int start);
 void main()
 {
-    printf("\nEnter number of nodes:");
+    int i, j;
+    printf("enter no of vertices");
     scanf("%d", &n);
-    // Reading the graph from adjacency matrix
+    for (i = 0; i < n; i++)
+    {for(j=0;j<n;j++){
+printf("enter adj matrix a[%d][%d]", i, j);
+        scanf("%d", &adj[i][j]);
+    }
+    }
+        
     for (i = 0; i < n; i++)
     {
-        for (j = 0; j < n; j++)
-        {
-            printf("\nA[%d][%d]:", i, j);
-            scanf("%d", &adj[i][j]);
-        }
+        visited[i] = 0;
     }
-    printf("\nEnter starting node:");
+    printf("enter starting vertex");
     scanf("%d", &start);
-    printf("\nDFS Visited Order\n");
     dfs(start);
 }
+
 void dfs(int node)
 {
-    // visiting the node
+    int i;
     visited[node] = 1;
-    printf(" %d", node);
-    for (int i = 0; i < n; i++)
+    printf("%d", node);
+    for (i = 0; i < n; i++)
     {
         if (adj[node][i] == 1 && visited[i] != 1)
         {
-            // calling dfs recursively on each children
             dfs(i);
         }
     }
