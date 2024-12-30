@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct node {
+struct node
+{
     int data;
     struct node *left;
     struct node *right;
@@ -10,145 +11,178 @@ struct node {
 struct node *root = NULL;
 
 int display();
-void insertion();
-void deletion();
-void search();  // Declare the search function
+void insert();
+void delete();
+int search();
+void inorder();
+void preorder();
+void postorder();
 
 void main()
 {
-    while (1) {
+    while (1)
+    {
         int choice;
-        printf("Enter 0 to display, 1 to insert, 2 to delete, 3 to search, 5 to exit: ");
+        printf("___Enter___\n 1.display\n 2.insert\n 3 to delete\n 4. search \n 5 .exit\n ");
         scanf("%d", &choice);
-        switch(choice) {
-            case 0:
-                display();
-                break;
-            case 1:
-                insertion();
-                break;
-            case 2:
-                deletion();
-                break;
-            case 3:
-                search();  // Call the search function
-                break;
-            case 5:
-                return;
-            default:
-                break;
+        switch (choice)
+        {
+        case 1:
+            display();
+            break;
+        case 2:
+            insert();
+            break;
+        case 3:
+            delete ();
+            break;
+        case 4:
+            search();
+            break;
+        case 5:
+            exit(0);
+        default:
+            printf("invalid choice");
+            
         }
     }
 }
 
-struct node *insert(struct node *root, struct node *newnode) {
+struct node *insertion(struct node *root, struct node *newnode)
+{
     if (root == NULL)
+    {
         root = newnode;
-    else if (root->data > newnode->data)
-        root->left = insert(root->left, newnode);
+    }
+    else if (root->data < newnode->data)
+    {
+        root->right = insertion(root->right, newnode);
+    }
     else
-        root->right = insert(root->right, newnode);
+    {
+        root->left = insertion(root->left, newnode);
+    }
     return root;
 }
-
-void insertion() {
-    struct node *newnode;
-    newnode = (struct node *) malloc(sizeof(struct node));
-    printf("Element: ");
+void insert()
+{
+    struct node *newnode = (struct node *)malloc(sizeof(struct node));
+    printf("enter element to insert :");
     scanf("%d", &newnode->data);
     newnode->left = newnode->right = NULL;
-    root = insert(root, newnode);
-    display();
+    root = insertion(root, newnode);
 }
 
-struct node *find_min(struct node *root) {
+struct node *find_min(struct node *root)
+{
     while (root->left != NULL)
+    {
         root = root->left;
+    }
     return root;
 }
-
-struct node *delete(struct node *root, int value) {
-    if (root == NULL) {
-        printf("Not found!\n");
-        return root;
+struct node *temp;
+struct node *deletion(struct node *root, int value)
+{
+    if (root == NULL)
+    {
+        printf("Tree is empty");
     }
-
-    struct node *temp;
-    if (value < root->data) {
-        root->left = delete(root->left, value);
-    } else if (value > root->data) {
-        root->right = delete(root->right, value);
-    } else {
-
-        if (root->left == NULL) {
-            temp = root->right;
-            free(root);
-            return temp;
-        } else if (root->right == NULL) {
+    if (value < root->data)
+    {
+        root->left = deletion(root->left, value);
+    }
+    else if (value > root->data)
+    {
+        root->right = deletion(root->right, value);
+    }
+    else
+    {
+        if (root->right == NULL)
+        {
             temp = root->left;
             free(root);
             return temp;
         }
+        else if (root->left == NULL)
+        {
+            temp = root->right;
+            free(root);
+            return temp;
+        }
+        else
+        {
+            root->data = find_min(root->right)->data;
 
-        root->data = find_min(root->right)->data;
-        root->right = delete(root->right, root->data);
+            root->right = deletion(root->right, root->data);
+        }
     }
-    return root;
 }
-
-void deletion() {
+void delete()
+{
     int value;
-    printf("Enter the node to delete: ");
+    printf("enter data to delete :");
     scanf("%d", &value);
-    root = delete(root, value);
+    root = deletion(root, value);
     display();
 }
 
-void preOrder(struct node *root) {
-    if (root == NULL)
-        return;
-
-    printf("%d -> ", root->data);
-    preOrder(root->left);
-    preOrder(root->right);
+int display()
+{
+    printf("Inorder: ");
+    inorder(root);
+    printf("\n");
+    printf("preorder: ");
+    preorder(root);
+    printf("\n");
+    printf("postorder: ");
+    postorder(root);
+    printf("\n");
 }
-
-void inOrder(struct node *root) {
+void inorder(struct node *root)
+{
     if (root == NULL)
+    {
+
         return;
-
-    inOrder(root->left);
-    printf("%d -> ", root->data);
-    inOrder(root->right);
-}
-
-void postOrder(struct node *root) {
-    if (root == NULL)
-        return;
-
-    postOrder(root->left);
-    postOrder(root->right);
-    printf("%d -> ", root->data);   
-}
-
-int display() {
-    if (root == NULL) {
-        printf("Tree is empty!\n");
-        return 0;
     }
+    else
+    {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+void preorder(struct node *root)
+{
+    if (root == NULL)
+    {
 
-    printf("Preorder: ");
-    preOrder(root);
-    printf("NULL\nInorder: ");
-    inOrder(root);
-    printf("NULL\nPostorder: ");
-    postOrder(root);
-    printf("NULL\n");
-    return 0;
+        return;
+    }
+    else
+    {
+        printf("%d ", root->data);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+void postorder(struct node *root)
+{
+    if (root == NULL)
+    {
+
+        return;
+    }
+    else
+    {
+        postorder(root->left);
+        postorder(root->right);
+        printf("%d ", root->data);
+    }
 }
 
-// Search function to find if a node with the given value exists
-void search() {
+int search() {
     int value;
     printf("Enter the value to search for: ");
     scanf("%d", &value);
@@ -157,11 +191,11 @@ void search() {
     while (current != NULL) {
         if (current->data == value) {
             printf("Element %d found in the tree.\n", value);
-            return;  // Element found, exit the function
+            return 1; 
         } else if (value < current->data) {
-            current = current->left;  // Go left if the value is smaller
+            current = current->left; 
         } else {
-            current = current->right;  // Go right if the value is larger
+            current = current->right;  
         }
     }
     printf("Element %d not found in the tree.\n", value);
