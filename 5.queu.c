@@ -1,216 +1,86 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <conio.h>
-void insertbeg();
-void insertend();
-void insertpos();
-void deletebeg();
-void deleteend();
-void deletepos();
-void search();
-void display();
+#include<stdio.h>
+#include<stdlib.h>
 
-struct node
-{
-    int data;
-    struct node *next;
-};
-struct node *temp, *newnode;
-struct node *head = NULL;
+#define size 5
 
-int main()
-{
-    while (1)
-    {
-        int choice;
-        printf("\n------Enter your choice-----\n1.Insert_Beginning\n2.Insert_End\n3.Insert_Position\n4.Delete_Beginning\n5.DElete_End\n6.Delete_position\n7.Search\n8.Display\n9.Exit\n");
-        scanf("%d", &choice);
+int q[size];
+int front = -1;
+int rear = -1;
 
-        switch (choice)
-        {
-        case 1:
-            insertbeg();
-            break;
-        case 2:
-            insertend();
-            break;
-        case 3:
-            insertpos();
-            break;
-        case 4:
-            deletebeg();
-            break;
-        case 5:
-            deleteend();
-            break;
-        case 6:
-            deletepos();
-            break;
-        case 7:
-            search();
-            break;
-        case 8:
-            display();
-            break;
-        case 9:
-            exit(0);
-            break;
-
-        default:
-            printf("Invalid choice");
-        }
+// Function to check if the queue is full
+int isFull() {
+    if (rear == size - 1) {
+        printf("\nOverflow\n");
+        return 1;
     }
-}
-void insertbeg()
-{
-    newnode = (struct node*)malloc(sizeof(struct node));
-    printf("Enter the data to insert: ");
-    scanf("%d", &newnode->data);
-    if (head == NULL)
-    {
-        newnode->next = newnode;
-    }
-    else
-    {
-        temp = head;
-        while (temp->next != head){
-            temp = temp->next;
-        }
-        temp->next = newnode;
-        newnode->next = head;
-    }
-
-    head = newnode;
+    return 0;
 }
 
-void insertend()
-{
-    newnode = (struct node *)malloc(sizeof(struct node));
-    printf("Enter the data to insert : ");
-    scanf("%d", &newnode->data);
-    temp = head;
-    while (temp->next != head)
-    {
-        temp = temp->next;
+// Function to check if the queue is empty
+int isEmpty() {
+    if (front == -1 || front > rear) {
+        printf("\nUnderflow\n");
+        return 1;
     }
-    temp->next = newnode;
-    newnode->next = head;
+    return 0;
 }
 
-void insertpos()
-{
-    int pos, i;
-    newnode = (struct node *)malloc(sizeof(struct node));
-    printf("Enter the position to insert: ");
-    scanf("%d", &pos);
-    printf("enter element to insert");
-    scanf("%d", &newnode->data);
-    temp = head;
-    if (pos == 1)
-    {
-        insertbeg();
+// Function to display the elements of the queue
+void display() {
+    if (isEmpty()) {
+        return;
     }
-    else
-    {
-        for (i = 1; i < pos - 1; i++)
-        {
-            temp->next = newnode;
-            newnode->next = temp->next->next;
-        }
+    printf("\nQueue elements: ");
+    for (int i = front; i <= rear; i++) {
+        printf("%d ", q[i]);
     }
+    printf("\n");
 }
 
-void deletebeg()
-{
-    temp = head;
-    if (head == NULL)
-    {
-        printf("List is empty");
-    }
-    while (temp->next != head)
-    {
-        temp = temp->next;
-    }
-    temp->next = head->next;
-    temp = head;
-    head = head->next;
-    free(temp);
-}
-
-void deleteend()
-{
-    if (head == NULL)
-    {
-        printf("List is empty");
-    }
-    temp = head;
-    while (temp->next != head)
-    {
-        temp = temp->next;
-    }
-    temp->next = head;
-    free(temp);
-}
-
-void deletepos()
-{
-    int pos, i;
-    if (head == NULL)
-    {
-        printf("List is empty");
-    }
-
-    printf("enter position to delete");
-    scanf("%d", &pos);
-    if (pos == 1)
-    {
-        deletebeg();
-    }
-    else
-    {
-        for (i = 0; i < pos; i++)
-        {
-            temp = temp->next;
-        }
-        temp->next = temp->next->next;
-        free(temp);
-    }
-}
-
-void search()
-{
-    int i, ele, flag = 0;
-    temp = head;
-    printf("enter element to search");
+// Function to add an element to the queue
+void enqueue() {
+    int ele;
+    printf("\nEnter the element for insertion: ");
     scanf("%d", &ele);
-    while (temp->next != head)
-    {
-        temp = temp->next;
-        if (temp->data == ele)
-        {
-            flag = 1;
-            printf("element found at %d", temp->data);
-        }
-        else
-        {
-            flag = 0;
-            printf("element not found");
-        }
+
+    if (isFull()) {
+        return;
     }
+    
+    if (front == -1) {
+        front = 0;
+    }
+    rear++;
+    q[rear] = ele;
+    display();
 }
-void display()
-{
-    temp = head;
-    if (head == NULL)
-    {
-        printf("List is empty");
+
+// Function to remove an element from the queue
+void dequeue() {
+    if (isEmpty()) {
+        return;
     }
-    else
-    {
-        do
-        {
-            printf("%d->", temp->data);
-            temp = temp->next;
-        } while (temp != head);
+    printf("\nDequeued element: %d\n", q[front]);
+    front++;
+    display();
+}
+
+void main() {
+    while (1) {
+        int ch;
+        printf("\nEnter your choice: \n1. Enqueue \n2. Dequeue \n3. Exit\n");
+        scanf("%d", &ch);
+        switch (ch) {
+            case 1:
+                enqueue();
+                break;
+            case 2:
+                dequeue();
+                break;
+            case 3:
+                exit(0);
+            default:
+                printf("\nInvalid choice!\n");
+        }
     }
 }
