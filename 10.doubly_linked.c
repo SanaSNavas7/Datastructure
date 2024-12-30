@@ -13,14 +13,14 @@ void deletebeg();
 void deleteend();
 void deletepos();
 void display();
-struct node *temp, *newnode,*s;
+struct node *temp, *newnode, *s;
 struct node *head = NULL;
 int main()
 {
     while (1)
     {
         int choice;
-        printf("enter 1.insertbeg \n  2.insertend \n 3.insertpos \n 4.deletebeg \n 5.deleteend \n 6.deletepos \n 7.display \n 8.exit");
+        printf("enter 1.insertbeg \n  2.insertend \n 3.insertpos \n 4.deletebeg \n 5.deleteend \n 6.deletepos \n 7.display \n 8.exit \n");
         scanf("%d", &choice);
         switch (choice)
         {
@@ -60,6 +60,7 @@ void insertbeg()
 {
     newnode = (struct node *)malloc(sizeof(struct node));
     printf("enter element to insert");
+    printf("\n");
     scanf("%d", &newnode->data);
     newnode->next = head;
     head = newnode;
@@ -71,6 +72,7 @@ void insertend()
     temp = head;
     newnode = (struct node *)malloc(sizeof(struct node));
     printf("enter element to insert");
+    printf("\n");
     scanf("%d", &newnode->data);
     while (temp->next != NULL)
     {
@@ -85,8 +87,10 @@ void insertpos()
     newnode = (struct node *)malloc(sizeof(struct node));
     int pos;
     printf("enter position to insert");
+    printf("\n");
     scanf("%d", &pos);
     printf("enter element to insert");
+    printf("\n");
     scanf("%d", &newnode->data);
     if (pos == 1)
     {
@@ -98,7 +102,7 @@ void insertpos()
 
         for (i = 1; i < pos - 1; i++)
         {
-           
+
             temp = temp->next;
         }
         newnode->next = temp->next;
@@ -117,35 +121,41 @@ void deletebeg()
 void deleteend()
 {
     temp = head;
-    while (temp->next != NULL)
+    while (temp->next->next != NULL)
     {
         temp = temp->next;
     }
+
     temp->next = NULL;
-    temp->next->prev = NULL;
 }
 void deletepos()
 {
 
     int pos;
     printf("enter position to delete");
+    printf("\n");
     scanf("%d", &pos);
     temp = head;
+    if (pos == 1)
+    {
+        deletebeg();
+    }
+    else if (temp->next->next == NULL)
+    {
+        temp->next = NULL;
+    }
+    else
+    {
 
-        for (i=0;i<pos-1;i++)
+        for (i = 1; i < pos - 1; i++)
 
-        { 
-            printf("%d",i);
+        {
             temp = temp->next;
-            printf("%d",temp->data);
         }
-        
-     
+
         temp->next = temp->next->next;
-s=temp->next;
-        s->next->prev = temp;
-    
-    display();}
+    }
+}
 
 void display()
 {
@@ -153,6 +163,7 @@ void display()
     if (temp == NULL)
     {
         printf("List is empty.\n");
+        printf("\n");
     }
     while (temp != NULL)
     {
