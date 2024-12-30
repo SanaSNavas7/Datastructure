@@ -1,114 +1,111 @@
-#define SIZE 5
-int stack[SIZE],size,i,top=-1;
 #include <stdio.h>
-#include<stdlib.h>
-void push(int stack[]);
-void pop(int stack[]);
-void peek(int stack[]);
-void display(int stack[]);
+#include <conio.h>
+#include <stdlib.h>
+#define SIZE 100
+int s[SIZE], i, size;
+int top = -1;
+
+void push();
+void pop();
+void peek();
+void display();
 
 int main()
 {
-printf("enter size of stack: ");
-scanf("%d",&size);
-if(size>SIZE)
-{
-printf("Size is larger");
-}
-else
-{
-printf("enter elements of stack: ");
-for(i=0;i<size;i++)
-{
-scanf("%d",&stack[i]);
-top++;
-}
+    printf("enter size of stack");
+    printf("\n");
+    scanf("%d", &size);
+
+    while (1)
+    {
+        int choice;
+        printf("enter 1.push \n 2.pop \n 3.peek \n 4.display \n 5.exit");
+        printf("\n");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            push();
+            break;
+        case 2:
+            pop();
+            break;
+        case 3:
+            peek();
+            break;
+        case 4:
+            display();
+            break;
+        case 5:
+            exit(0);
+            break;
+        default:
+            printf("invalid");
+        }
+    }
+    return 0;
 }
 
-
-while(1)
+void push()
 {
-int ch;
-printf("enter \n 1.push\n 2.pop\n 3.peek\n 4.display\n 5.exit ");
-
-scanf("%d",&ch);
-switch(ch){
-case 1:push(stack);
-break;
-case 2:pop(stack);
-break;
-case 3:peek(stack);
-break;
-case 4:display(stack);
-break;
-case 5:exit(0);
-break;
-default:printf("invalid");
-}}return 0;
+    int item;
+    printf("enter element to insert");
+    printf("\n");
+    scanf("%d", &item);
+    if (top == SIZE - 1)
+    {
+        printf("overflow");
+        printf("\n");
+    }
+    else
+    {
+        top = top + 1;
+        s[top] = item;
+    }
 }
 
-
-
-void push(int stack[])
+void pop()
 {
-int ele;
-if(top>=SIZE)
-{
-printf("overflow");
-}
-else
-{
-printf("enter element to insert");
-scanf("%d",&ele);
-top=top+1;
-stack[top]=ele;
-}
+    int a;
+    if (top == -1)
+    {
+        printf("Underflow");
+        printf("\n");
+    }
+    else
+    {
+        a = s[top];
+    }
+    top--;
 }
 
-void pop(int stack[])
+void peek()
 {
-int d;
-if(top==-1)
-{
-printf("underflow");
-}
-else
-{
-d=stack[top];
-top--;
-}
-}
-
-void  peek(int stack[])
-{
-if(top==-1)
-{
-printf("underflow");
-}
-else
-{
-printf("top element is %d",stack[top]);
-}
+    if (top == -1)
+    {
+        printf("stack empty");
+        printf("\n");
+    }
+    else
+    {
+        printf("top element is %d", s[top]);
+        printf("\n");
+    }
 }
 
-void display(int stack[])
+void display()
 {
-if(top==-1)
-{
-printf("underflow");
+    if (top == -1)
+    {
+        printf("underflow");
+        printf("\n");
+    }
+    else
+    {
+        for (i = top; i >= 0; i--)
+        {
+            printf("%d ", s[i]);
+            
+        }
+    }
 }
-else
-{
-for(i=0;i<=top;i++)
-{
-printf("%d",stack[i]);
-}
-
-}
-}
-
-
-
-
-
-
