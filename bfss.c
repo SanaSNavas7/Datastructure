@@ -13,7 +13,7 @@ int main()
     printf("Enter number of vertices: ");
     scanf("%d", &n);
 
-    // Reading the adjacency matrix
+    
     for (i = 0; i < n; i++)
     {
         for (j = 0; j < n; j++)
@@ -23,18 +23,18 @@ int main()
         }
     }
 
-    // Input starting vertex
+
     printf("Enter starting vertex: ");
     scanf("%d", &start);
 
-    // Check for valid start vertex
+    
     if (start < 0 || start >= n)
     {
         printf("Invalid vertex!\n");
     }
     else
     {
-        // Initialize visited array to 0 (not visited)
+
         for (i = 0; i < n; i++)
         {
             visited[i] = 0;
@@ -49,52 +49,52 @@ int main()
 
 void bfs(int start)
 {
-    enqueue(start);          // Enqueue the starting vertex
-    visited[start] = 1;      // Mark the starting vertex as visited
-    printf("%d ", start);    // Print the starting vertex
+    enqueue(start);          
+    visited[start] = 1;      
+    printf("%d ", start);    
 
-    while (front != -1)  // Continue while the queue is not empty
+    while (front != -1)  
     {
-        int node = dequeue();   // Dequeue the next node to process
+        int node = dequeue();   
         for (i = 0; i < n; i++)
         {
-            if (adj[node][i] == 1 && visited[i] == 0)  // Check for unvisited neighbors
+            if (adj[node][i] == 1 && visited[i] == 0)  
             {
-                visited[i] = 1;      // Mark as visited
-                printf("%d ", i);    // Print the visited node
-                enqueue(i);          // Enqueue the unvisited neighbor
+                visited[i] = 1;      
+                printf("%d ", i);    
+                enqueue(i);          
             }
         }
     }
 }
 
-// Enqueue function to add nodes to the queue
+
 void enqueue(int node)
 {
-    if (front == -1 && rear == -1)  // If the queue is empty
+    if (front == -1 && rear == -1)  
     {
         front = 0;
         rear = 0;
     }
     else
     {
-        rear++;  // Move the rear pointer to the next position
+        rear++;  
     }
-    queue[rear] = node;  // Add node to the queue
+    queue[rear] = node;  
 }
 
-// Dequeue function to remove nodes from the front of the queue
+
 int dequeue()
 {
-    int node = queue[front];  // Get the node at the front of the queue
-    if (front == rear)  // If there's only one element in the queue
+    int node = queue[front]; 
+    if (front == rear) 
     {
         front = -1;
-        rear = -1;  // Reset the queue when it's empty
+        rear = -1;  
     }
     else
     {
-        front++;  // Move the front pointer to the next position
+        front++;  
     }
-    return node;  // Return the dequeued node
+    return node; 
 }
