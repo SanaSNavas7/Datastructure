@@ -1,91 +1,93 @@
 #include <stdio.h>
-
-
-#define SIZE 50
-
-int vertices;
-int indegree[SIZE];
-int graph[SIZE][SIZE];
-
-void topological() {
-    int count = 0;
-    int stack[SIZE], top = -1;
-
-    for (int i = 0; i < vertices; i++) {
-        indegree[i] = 0;  //initializing
-        for (int j = 0; j < vertices; j++) {
-            if (graph[j][i] == 1) {
-                indegree[i]++;
+#include <stdlib.h>
+#include <stdbool.h>
+int n, adj[20][20], visitedCount = 0, queue[20], front = -1, rear = -1, inDegree[20];
+void enqueue(int vertex);
+int dequeue();
+void main()
+{
+    printf("\nEnter the number of nodes:");
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++)
+    {
+        inDegree[i] = 0;
+    }
+    printf("\nEnter the adjacency matrix");
+    // reading the adjacency matrix and upadating the indegree
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            printf("\na[%d][%d]:", i, j);
+            scanf("%d", &adj[i][j]);
+            if (i == j && adj[i][j] != 0)
+            {
+                printf("\nGraph contains self loops...Exiting");
+                exit(0);
+            }
+            if (adj[i][j] == 1)
+            {
+                // incrementing indegree for j for each directed edge i-->j
+                inDegree[j]++;
             }
         }
     }
-
-    // Push vertices with indegree 0 to stack
-    for (int i = 0; i < vertices; i++) {
-        if (indegree[i] == 0) {
-            stack[++top] = i;
+    for (int i = 0; i < n; i++)
+    {
+        if (inDegree[i] == 0)
+        {
+            // adding all the vertices with zero indegree to queue
+            enqueue(i);
         }
     }
-
-    printf("Topological Sort: ");
-    while (top != -1) {
-        int u = stack[top--];  
-        printf("%d ", u);
-
-        // Reduce the indegree of neighbors and push those with indegree 0
-        for (int i = 0; i < vertices; i++) {
-            if (graph[u][i] == 1) {
-                indegree[i]--;
-                if (indegree[i] == 0) {
-                    stack[++top] = i;
+    printf("\nTopological Sorting Ordering\n");
+    while (front != -1 && rear != -1)
+    {
+        // repeat all the steps while queue is not empty
+        int vertex = dequeue();
+        // removing vertex from queue and adding it to topological ordering
+        printf("%d ", vertex);
+        visitedCount++;
+        // updating indegree for all adjacent vertices of vertex 'vertex' and adding
+        // it to queue if the upadated indegree is zero
+        for (int i = 0; i < n; i++)
+        {
+            if (adj[vertex][i] == 1)
+            {
+                inDegree[i]--;
+                if (inDegree[i] == 0)
+                {
+                    enqueue(i);
                 }
             }
         }
     }
-
-    printf("\n");
+    if (visitedCount < n)
+    {
+        // if there are nodes left even after queue is empty, the graph is cyclic
+        printf("\nGraph is cyclic");
+    }
 }
-
-int main() {
-    // Initialize the graph
-    printf("Enter the number of vertices: \n");
-    scanf("%d", &vertices);
-
-    // Initialize the adjacency matrix
-    for (int i = 0; i < vertices; i++) {
-        for (int j = 0; j < vertices; j++) {
-            graph[i][j] = 0;
-        }
+void enqueue(int vertex)
+{
+    if (front == -1)
+    {
+        front++;
     }
-
-    // Assign edges to the graph
-    int edge;
-    for (int i = 0; i < vertices; i++) {
-        for (int j = 0; j < vertices; j++) {
-            if (i != j) {
-                printf("\nDoes edge exist between the vertices: %d and %d? (Enter '1' if Yes, '0' if No): ", i, j);
-                scanf("%d", &edge);
-                if (edge == 1) {
-                    graph[i][j] = 1;
-                }
-                else if (edge != 0) {
-                    printf("Enter a valid input!\n");
-                }
-            }
-        }
+    rear++;
+    queue[rear] = vertex;
+}
+int dequeue()
+{
+    int vertex = queue[front];
+    if (front == rear)
+    {
+        front = -1;
+        rear = -1;
     }
-
-    // Print the adjacency matrix
-    printf("\nAdjacency Matrix:\n");
-    for (int i = 0; i < vertices; i++) {
-        for (int j = 0; j < vertices; j++) {
-            printf("%d ", graph[i][j]);
-        }
-        printf("\n");
+    else
+    {
+        front++;
     }
-
-    // Perform topological sorting
-    topological();
-
-    return 0;
+    return vertex;
 }
